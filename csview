@@ -1,0 +1,23 @@
+#! /bin/bash
+# @Function
+#   Short function for formatting a csv to be viewed in less
+#
+# @Usage
+#
+#   Standalone:
+#   $ ./csview path
+#
+#   In a pipe
+#   $ ... | ./csview 
+#
+# @author Xm0d3us
+
+if [ $# -eq 0 ] ; then
+    column -s, -t | less -N -S -#2;
+elif [ $# -eq 1 ] ; then
+    column -s, -t < $1 | less -N -S -#2;
+else
+    echo "Too many arguments!";
+fi
+
+

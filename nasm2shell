@@ -1,0 +1,27 @@
+#! /bin/bash
+# @Function
+#   Assemble a nasm assembly file and extract the shellcode in a C-friendly format
+#
+# @Usage
+#
+#   $ ./nasm2shell nasmFile
+#
+# @author Xm0d3us
+
+if [ $# -ne 1 ] ; then
+    echo "Usage: ./nams2shell filePath"
+    exit 1
+fi
+
+if [ ! -f $1 ] ; then
+    echo "File not found: $1"
+    exit 1
+fi
+
+objFile="${1%.*}.obj"
+# Assemble the assembly file
+nasm -o $objFile $1;
+# Get the hex from the object file and extract it
+objdump -m i8086 -M intel -b binary -D $objFile | awk -F: '{print $2}' | sed 's/\t//g' | grep -Po '^([0-9a-f]{2} )+' | sed 's/ *$//g' | sed 's/ /\\x/g' | sed 's/^/\\x/' | sed ':a;N;$!ba;s/\n//g;' | sed 's_\(\(\\x[a-f0-9A-F\]\{2\}\)\{15\}\)_\1\n_g' | sed 's/^/\"/' | sed 's/$/\"/'
+# clean up the object file
+rm $objFile

@@ -1,0 +1,36 @@
+#! /bin/bash
+# @Function
+#   Utility for managing the current working directory
+#
+# @Usage
+#
+#   $ ./wd [s[et]|c[lear]]
+#
+# @author Xm0d3us
+#
+# NOTE:
+#   In order for this to function properly, the following must be added to your .bashrc:
+#
+#    if [ -e "/tmp/.working_dir" ]; then
+#        if [ "$(cat /tmp/.working_dir)" != "" ]; then
+#            cd $(cat /tmp/.working_dir)
+#        fi
+#    fi
+
+
+
+# If no argument is provided, print the current working directory
+if [ $# -eq 0 ] ; then
+    cat /tmp/.working_dir
+
+# Clear the working directory
+elif [ $1 == "c" ] || [ $1 == "clear" ] ; then
+    echo "" > /tmp/.working_dir
+
+# Set the working directory
+elif [ $1 == "s" ] || [ $1 == "set" ] ; then
+    echo $(pwd) > /tmp/.working_dir
+
+else
+    echo "Usage: wd [s[et]|c[lear]]"
+fi

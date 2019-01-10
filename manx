@@ -1,0 +1,60 @@
+#! /bin/bash
+# @Function
+#   Tool for browsing man pages by section headers
+#
+# @Usage
+#
+#   $ ./manx page[.section]
+#
+# @author Xm0d3us
+
+# Make sure the correct number of arguments were provided
+if [[ $# -lt 1 ]] ; then
+    echo "Please specify a man page"
+    exit
+fi
+
+if ! man "$1" > /dev/null 2>&1 ; then 
+    echo "No manual entry for $1"
+    exit
+fi
+
+# Display the table of contents
+index=0;
+out=""
+while read -r sec; do
+    out="$out\n${index}:$sec";
+    sections[$index]="$sec";
+    index=$((index + 1));
+done < <(man $1 2>/dev/null| grep -P '^[A-Z][A-Z ]+$')
+
+echo -e $out | column -s: -t
+echo "----------------------------------------"
+while true; do
+    # Get the index selection
+    read -p "Index: " selection
+
+    # If the index is blank, exit
+    if [[ $selection == "" ]] ; then
+        exit
+    fi
+    
+    # Validate that its a number
+    re='^[0-9]+$'
+    if ! [[ $selection =~ $re ]] ; then
+        echo "error: Invalid Index";
+        exit
+    # Validate that its in range
+    elif [ $selection -ge ${#sections[@]} ] ; then
+        echo "error: Invalid Index";
+        exit
+    else
+        # Display the requested man page
+        man $1 2>/dev/null | sed -n "/^${sections[$selection]}/{h;n;ba};d;:a;\$!{/^[A-Z][A-Z ]\+$/{g;p;q};H;n;ba};g;p" | less
+    fi
+    # Go back one line
+    echo -en "\e[1A"
+    echo "                            "
+    echo -en "\e[1A"
+done
+
