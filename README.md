@@ -8,20 +8,22 @@ Some bash scripts I have written that make my life a little easier.
 * [__manx__](#manx) - Browse a man page using the section headers.
 * [__wd__](#wd) - Set and clear a "Working Directory" so that new terminals open to your current project.
 * [__nasm2shell__](#nasm2shell) - Extract shellcode from a NASM assembly file in a C-friendly format.
+* [__nmap-search__](#nmap-search) - Search a nmap output file for hosts with a given open port.
 
 ## csview
 
 __Summary:__ View an unformatted CSV file cleanly in less.
 
 __Usage:__
-- As a standalone: `$ csview somefile.csv`
-- In a pipe: `$ cat somefile.csv | csview`
+- As a standalone: `$ csview <some csv file>`
+- In a pipe: `$ cat <some csv file> | csview`
 
 
 ## manx
+
 __Summary:__ Rather than view a large man page all at once, break it up by section headers for easier browsing.
 
-__Usage:__ `$ manx somepage`
+__Usage:__ `$ manx <some man page>`
 
 You will then be shown all of the section headers in the requested man page and an associated index for each. Simply select the index of the section header you want to view and press enter. Upon leaving the less interface you will be returned to the index selection. To exit simply provide empty input or press ctrl+c.
 
@@ -47,5 +49,12 @@ __Setup:__ In order for newly opened terminals to navigate to the working direct
 
 __Summary:__ Given a assembly file written in the NASM format, assemble it and extract the hex as well-formatted strings that play nice with C.
 
-__Usage:__ `nasm2shell somefile.asm`
+__Usage:__ `nasm2shell <assembly file>`
 
+## nmap-search
+
+__Summary:__ Parse the output of nmap and list all hosts with a given open port.
+
+__Usage:__
+- As a standalone: `$ nmap-search <port> <nmap normal output file>`
+- In a pipe: `$ cat <nmap normal output file> | nmap-search <port>`

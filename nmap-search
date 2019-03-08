@@ -1,0 +1,35 @@
+#! /bin/bash
+# @Function
+#   Function for parsing nmap output and showing hosts with the given open port
+#
+# @Usage
+#
+#   Standalone:
+#   $ ./nmap-search <port> <nmap output file>
+#
+#   In a pipe
+#   $ ... | ./nmap-search <port>
+#
+# @author Xm0d3us
+function nmap-search {
+    if [ -z "$1" ];
+    then
+        echo "Usage: nmap-search <port> [file path]";
+        return;
+    fi;
+
+    if ! [[ "$1" =~ [0-9]+$ ]];
+    then
+        echo "Invalid Port!"
+        return;
+    fi;
+
+    if [ ! -z "$2" ] && [ ! -f "$2" ];
+    then
+        echo "Invalid File!"
+        return;
+    fi;
+
+    awk '/Nmap/{a=1; ip=substr($NF, 2, length($NF)-2); domain=$(NF-1); next} /^$/{a=0; next} (a && ($1 ~ '"$1"') && $2 == "open"){printf("%-20s %s\n", ip, domain)}' $2;
+}
+
